@@ -9,5 +9,5 @@ with sqlite3.connect('csv.db') as connection:
                 first_name TEXT, last_name TEXT, address TEXT, state TEXT, zip_code INTEGER,
                 status_change TEXT, product_id INTEGER, product_name TEXT, purchase_amount REAL,
               date TEXT)""")
-
+    #print c.execute("SELECT * from data").fetchall()
 
