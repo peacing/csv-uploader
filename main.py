@@ -1,13 +1,18 @@
 from flask import Flask, render_template, session, redirect, url_for, flash, request, send_from_directory
 from werkzeug.utils import secure_filename
-import os
+import os, csv
+import io
+import sqlite3
 
 UPLOAD_FOLDER = '/tmp'
+ALLOWED_EXTENSIONS = set(['csv'])
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config.from_object(__name__)
+app.secret_key = 'super secret key'
 
-ALLOWED_EXTENSIONS = set(['csv'])
+def connect_db():
+    return sqlite3.connect(app.config['DATABASE'])
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -28,8 +33,14 @@ def upload_file():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file', filename=filename))
+            #file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            stream = io.StringIO(file.stream.read().decode("UTF8"), newline=None)
+            csv_input = csv.reader(stream)
+            print csv_input
+            for row in csv_input:
+                print row
+            flash('File uploaded successfully!')
+            return render_template('base.html')
 
     return render_template('base.html')
 
