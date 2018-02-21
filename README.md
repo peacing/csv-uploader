@@ -1,6 +1,6 @@
 Environment Notes
 
-Python 3 is required to run this code.
+Python 2.7 is required to run this code.
 Additional dependencies are listed in requirements.txt
 and can be installed by running pip install -r requirements.txt
 
